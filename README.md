@@ -6,9 +6,17 @@ The program will prompt for the Canvas course ID.
 
 It will also prompt for the authentication token if one isn't given in `token.txt` file.
 
+## Quick Start
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python sending_conversations_sample.py --help
+```
+
 ## Commands
 ### export
-The export command extracts the Canvas user ID and SIS user ID of the given course. This command is handy for preparing the values file for sending conversation.
+The export command extracts the Canvas user ID and SIS user ID of **active** students in the given course. This command is handy for preparing the values file for sending conversation.
 
 Specify the output file with `--output` parameter. The default is `enrollment_students.csv`
 
