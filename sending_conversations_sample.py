@@ -39,7 +39,7 @@ def get_course_info(token, course_id):
 
 
 def export_course_active_enrollments(token, course_id, output_filename, type='StudentEnrollment'):
-    url = base_url + '/courses/{}/enrollments?state=active&type[]={}'.format(course_id, type)
+    url = base_url + '/courses/{}/enrollments?per_page=100&state=active&type[]={}'.format(course_id, type)
     resp = requests.get(url,
         headers= {'Authorization': 'Bearer ' + token})
 
