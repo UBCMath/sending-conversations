@@ -1,0 +1,6 @@
+token.txt
+values.txt
+*.csv
+*.pyc
+venv/
+template.txt

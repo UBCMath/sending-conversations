@@ -1,0 +1,11 @@
+Hi,
+
+Please find below the link to retrieve your paper.
+
+${the_url}
+
+${comments}
+
+Regards,
+Your instructors
+
