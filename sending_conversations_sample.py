@@ -43,17 +43,27 @@ def export_course_active_enrollments(token, course_id, output_filename, type='St
     resp = requests.get(url,
         headers= {'Authorization': 'Bearer ' + token})
 
-    if resp.ok:
-        data = resp.json()
-        df = pd.DataFrame(columns=['canvas_user_id','sis_user_id'])
-        index = 0
-        for enrollment in data:
-            df.loc[index] = [str(enrollment['user_id']), str(enrollment['sis_account_id'])]
-            index += 1
+    df = pd.DataFrame(columns=['canvas_user_id','sis_user_id'])
+    more_to_process = True
+    index = 0
 
-        df.to_csv(output_filename, sep='\t', encoding='utf-8', index=False)
-    else:
-        raise Exception('Problem getting enrollments')
+    while more_to_process:
+        if resp.ok:
+            data = resp.json()
+            for enrollment in data:
+                df.loc[index] = [str(enrollment['user_id']), str(enrollment['sis_account_id'])]
+                index += 1
+
+            # Check if Canvas only sent us part the info and there is more to get
+            # refernce: https://canvas.instructure.com/doc/api/file.pagination.html
+            if resp.links and resp.links.get('next', None) and resp.links.get('next').get('url', None):
+                resp = requests.get(resp.links['next']['url'], headers= {'Authorization': 'Bearer ' + token})
+            else:
+                more_to_process = False
+        else:
+            raise Exception('Problem getting enrollments')
+
+    df.to_csv(output_filename, sep='\t', encoding='utf-8', index=False)
 
 
 def post_conversations(token, course_id, canvas_user_id, subject, message):
