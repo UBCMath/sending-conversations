@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2020-03-27
+### Added
+- WIP feature for skipping some rows depending on a `SendMsg` column
+
 ## 2020-03-10
 ### Added
 - add requirements.txt

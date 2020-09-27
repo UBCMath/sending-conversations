@@ -94,14 +94,32 @@ def merge_and_send_conversation(token, course_id, template_file, conversation_va
         print(_merge_message(template_str, **row.to_dict()))
         print('--------')
 
+    # TODO: WIP supporting a "SendMsg" True/False column: rows with False will be skipped
+    check_SendMsg = True
+    if check_SendMsg:
+        print(df.SendMsg)
+
     if not click.confirm('Do you want to proceed', default=False, prompt_suffix='? '):
         return
 
-    for _, row in df.iterrows():
-        print('Sending to {}'.format(row['canvas_user_id']))
+    for i, row in df.iterrows():
+        if check_SendMsg:
+            if not row.SendMsg:
+                print('{}: Skipping {}: SendMsg is false'.format(i, row['canvas_user_id']))
+                continue
+        print('{}: Sending to {}'.format(i, row['canvas_user_id']))
         post_conversations(token, course_id, row['canvas_user_id'], 
             'subject of the conversations', 
             _merge_message(template_str, **row.to_dict()))
+        if check_SendMsg:
+            # if we successfully messaged, then update the row
+            # TODO: there must be a nicer way
+            df['SendMsg'].iloc[i] = False
+    if check_SendMsg:
+        print(df.SendMsg)
+        new_filename = 'output.csv'
+        print("SendMsg column was enabled: updated sheet written to {}".format(new_filename))
+        df.to_csv(new_filename)
 
 
 @click.group()
