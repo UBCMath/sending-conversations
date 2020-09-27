@@ -87,7 +87,20 @@ def merge_and_send_conversation(token, course_id, template_file, conversation_va
     with open(template_file, 'r') as f:
         template_str = f.read()
 
-    df = pd.read_csv(conversation_values_file, sep='\t', index_col=False)
+    df = pd.read_csv(conversation_values_file, index_col=False)
+
+    # TODO: I obtained my spreadsheet from Canvas export and found I needed to do this...
+    # logic should be improved, or maybe we should *always* grab from Canvas with this tool
+    df['canvas_user_id'] = df['ID']
+
+    # TODO: big junky effort to quickly make "1" into "001" for my Test IDs...
+    # Better would be check if the mail merge supports formatting, or someone
+    # with better Pandas skills could maybe make sure that column is strings
+    #print(df.columns)
+    # #df['Test_ID'] = df['Test ID (686545)']  # in principle, I'll have this on Canvas
+    #df['Test_ID'] = df['Test_ID'].apply(lambda x: "{}".format(str(x).zfill(3)))
+    #print(df['Test_ID'].head())
+
     print("Here are the first few conversations as examples:")
     for _, row in df.head().iterrows():
         print('---- {} ----'.format(row['canvas_user_id']))
