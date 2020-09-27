@@ -111,7 +111,7 @@ def do_action(ctx):
     try:
         with open(token_file, 'r') as f:
             token = f.readline()
-            print("Got token from token.txt")
+            print("Got token from {}".format(token_file))
     except IOError:
         token = click.prompt("Enter your Canvas Token", hide_input=True)
 
